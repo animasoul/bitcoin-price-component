@@ -39,31 +39,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
 const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
+// Format currency values
 function formatCurrency(value) {
     if (value === undefined) {
-        return "0.00";
+        return "N/A";
     }
     return new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     }).format(value);
 }
-// ... (the rest of the imports and interfaces remain the same)
-const BitcoinPrice = ({ label = "Bitcoin Price Data:", }) => {
+const BitcoinPrice = ({ label = "Bitcoin Price Data:", btnText = "Refresh", incLabel = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, }) => {
     const [data, setData] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
+    const [error, setError] = (0, react_1.useState)(null);
+    // Fetch Bitcoin price data
     const fetchPrice = () => __awaiter(void 0, void 0, void 0, function* () {
         setLoading(true);
+        setError(null);
         try {
-            const response = yield axios_1.default.get(API_ENDPOINT, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            const response = yield axios_1.default.get(API_ENDPOINT);
             setData(response.data);
         }
         catch (error) {
             console.error("Error fetching Bitcoin price:", error);
+            setError("Failed to fetch Bitcoin price data.");
         }
         finally {
             setLoading(false);
@@ -73,26 +73,35 @@ const BitcoinPrice = ({ label = "Bitcoin Price Data:", }) => {
         fetchPrice();
     }, []);
     return (react_1.default.createElement("div", { className: "bitcoin-price-component" },
-        react_1.default.createElement("h3", { className: "bpc-label" }, label),
-        loading ? ("Fetching Bitcoin price...") : (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement("p", { className: "bpc-updated" },
+        incLabel && react_1.default.createElement("h3", { className: "bpc-label" }, label),
+        loading && "Fetching Bitcoin price...",
+        error && react_1.default.createElement("p", { className: "bpc-error" }, error),
+        !loading && !error && (react_1.default.createElement(react_1.default.Fragment, null,
+            incUpdateTime && (data === null || data === void 0 ? void 0 : data.time.updated) && (react_1.default.createElement("p", { className: "bpc-updated" },
                 react_1.default.createElement("strong", null, "Updated:"),
-                " ", data === null || data === void 0 ? void 0 :
-                data.time.updated),
+                " ",
+                data.time.updated)),
             (data === null || data === void 0 ? void 0 : data.bpi) &&
-                Object.keys(data.bpi).map((currencyCode) => (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode}` },
-                    react_1.default.createElement("strong", null,
-                        currencyCode,
-                        ":"),
-                    " ",
-                    react_1.default.createElement("span", { dangerouslySetInnerHTML: {
-                            __html: data.bpi[currencyCode].symbol,
-                        } }),
-                    formatCurrency(data.bpi[currencyCode].rate_float)))),
-            react_1.default.createElement("p", { className: "bpc-disclaimer" },
+                Object.keys(data.bpi).map((currencyCode) => {
+                    if ((currencyCode === "USD" && !incUSD) ||
+                        (currencyCode === "GBP" && !incGBP) ||
+                        (currencyCode === "EUR" && !incEUR)) {
+                        return null; // Do not render this currency
+                    }
+                    return (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode}` },
+                        react_1.default.createElement("strong", null,
+                            currencyCode,
+                            ":"),
+                        " ",
+                        react_1.default.createElement("span", { dangerouslySetInnerHTML: {
+                                __html: data.bpi[currencyCode].symbol,
+                            } }),
+                        formatCurrency(data.bpi[currencyCode].rate_float)));
+                }),
+            incDisclaimer && (data === null || data === void 0 ? void 0 : data.disclaimer) && (react_1.default.createElement("p", { className: "bpc-disclaimer" },
                 react_1.default.createElement("strong", null, "Disclaimer:"),
-                " ", data === null || data === void 0 ? void 0 :
-                data.disclaimer))),
-        react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice }, "Refresh")));
+                " ",
+                data.disclaimer)))),
+        react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice }, btnText)));
 };
 exports.default = BitcoinPrice;

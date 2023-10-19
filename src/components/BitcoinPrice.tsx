@@ -20,11 +20,19 @@ interface BitcoinData {
 
 interface BitcoinPriceProps {
   label?: string;
+  btnText?: string;
+  incLabel?: boolean;
+  incUSD?: boolean;
+  incGBP?: boolean;
+  incEUR?: boolean;
+  incDisclaimer?: boolean;
+  incUpdateTime?: boolean;
 }
 
+// Format currency values
 function formatCurrency(value: number | undefined): string {
   if (value === undefined) {
-    return "0.00";
+    return "N/A";
   }
   return new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
@@ -32,25 +40,30 @@ function formatCurrency(value: number | undefined): string {
   }).format(value);
 }
 
-// ... (the rest of the imports and interfaces remain the same)
-
 const BitcoinPrice: React.FC<BitcoinPriceProps> = ({
   label = "Bitcoin Price Data:",
+  btnText = "Refresh",
+  incLabel = true,
+  incUSD = true,
+  incGBP = true,
+  incEUR = true,
+  incDisclaimer = true,
+  incUpdateTime = true,
 }) => {
   const [data, setData] = useState<BitcoinData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Fetch Bitcoin price data
   const fetchPrice = async () => {
     setLoading(true);
+    setError(null);
     try {
-      const response = await axios.get(API_ENDPOINT, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.get(API_ENDPOINT);
       setData(response.data);
     } catch (error) {
       console.error("Error fetching Bitcoin price:", error);
+      setError("Failed to fetch Bitcoin price data.");
     } finally {
       setLoading(false);
     }
@@ -62,35 +75,50 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = ({
 
   return (
     <div className="bitcoin-price-component">
-      <h3 className="bpc-label">{label}</h3>
-      {loading ? (
-        "Fetching Bitcoin price..."
-      ) : (
+      {incLabel && <h3 className="bpc-label">{label}</h3>}
+      {loading && "Fetching Bitcoin price..."}
+
+      {error && <p className="bpc-error">{error}</p>}
+
+      {!loading && !error && (
         <>
-          <p className="bpc-updated">
-            <strong>Updated:</strong> {data?.time.updated}
-          </p>
+          {incUpdateTime && data?.time.updated && (
+            <p className="bpc-updated">
+              <strong>Updated:</strong> {data.time.updated}
+            </p>
+          )}
 
           {data?.bpi &&
-            Object.keys(data.bpi).map((currencyCode) => (
-              <p key={currencyCode} className={`bpc-${currencyCode}`}>
-                <strong>{currencyCode}:</strong>{" "}
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: data.bpi[currencyCode].symbol,
-                  }}
-                />
-                {formatCurrency(data.bpi[currencyCode].rate_float)}
-              </p>
-            ))}
+            Object.keys(data.bpi).map((currencyCode) => {
+              if (
+                (currencyCode === "USD" && !incUSD) ||
+                (currencyCode === "GBP" && !incGBP) ||
+                (currencyCode === "EUR" && !incEUR)
+              ) {
+                return null; // Do not render this currency
+              }
+              return (
+                <p key={currencyCode} className={`bpc-${currencyCode}`}>
+                  <strong>{currencyCode}:</strong>{" "}
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: data.bpi[currencyCode].symbol,
+                    }}
+                  />
+                  {formatCurrency(data.bpi[currencyCode].rate_float)}
+                </p>
+              );
+            })}
 
-          <p className="bpc-disclaimer">
-            <strong>Disclaimer:</strong> {data?.disclaimer}
-          </p>
+          {incDisclaimer && data?.disclaimer && (
+            <p className="bpc-disclaimer">
+              <strong>Disclaimer:</strong> {data.disclaimer}
+            </p>
+          )}
         </>
       )}
       <button className="bpc-refresh" onClick={fetchPrice}>
-        Refresh
+        {btnText}
       </button>
     </div>
   );

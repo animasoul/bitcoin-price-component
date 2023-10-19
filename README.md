@@ -25,13 +25,23 @@ import 'bitcoin-price-component/dist/BitcoinPrice.css';
 ```
 
 Then use it in your component:
-\*\*note: Label is not necessary, if ommited will default to "Bitcoin Price Data:"
+
+##### note: all the properties are optional, the ones specified below are the default values
 
 ```bash
 function App() {
   return (
     <div>
-      <BitcoinPrice label="Some text Here" />
+      <BitcoinPrice
+          label="Current Bitcoin Prices:"
+          btnText="Refresh"
+          incLabel={true}
+          incUSD={true}
+          incGBP={true}
+          incEUR={true}
+          incDisclaimer={true}
+          incUpdateTime={true}
+        />
     </div>
   );
 }
