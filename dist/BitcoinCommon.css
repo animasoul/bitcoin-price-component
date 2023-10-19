@@ -8,8 +8,8 @@ div.bitcoin-price-component .bpc-EUR.changed {
   color: red;
   transition: color 2s ease-out; }
 
-div.bitcoin-price-component .bpc-USD.green,
-div.bitcoin-price-component .bpc-GBP.green,
-div.bitcoin-price-component .bpc-EUR.green {
+div.bitcoin-price-component .bpc-USD.unchanged,
+div.bitcoin-price-component .bpc-GBP.unchanged,
+div.bitcoin-price-component .bpc-EUR.unchanged {
   color: green;
   transition: color 2s ease-out; }

@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import "../BitcoinCommon.css";
 
 const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
 
@@ -23,6 +22,7 @@ interface BitcoinPriceProps {
   label?: string;
   btnText?: string;
   incLabel?: boolean;
+  incBtn?: boolean;
   incUSD?: boolean;
   incGBP?: boolean;
   incEUR?: boolean;
@@ -45,6 +45,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
     label = "Bitcoin Price Data:",
     btnText = "Refresh",
     incLabel = true,
+    incBtn = true,
     incUSD = true,
     incGBP = true,
     incEUR = true,
@@ -57,7 +58,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
   const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
   const [currencyStatus, setCurrencyStatus] = useState<{
-    [key: string]: "changed" | "green" | "";
+    [key: string]: "changed" | "unchanged" | "";
   }>({ USD: "", GBP: "", EUR: "" });
 
   const prevRatesRef = useRef<{ [key: string]: number }>({});
@@ -70,7 +71,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
     try {
       const response = await axios.get(API_ENDPOINT);
       const newData = response.data;
-      const newStatus: { [key: string]: "changed" | "green" | "" } = {};
+      const newStatus: { [key: string]: "changed" | "unchanged" | "" } = {};
 
       ["USD", "GBP", "EUR"].forEach((currency) => {
         if (
@@ -78,7 +79,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
         ) {
           newStatus[currency] = "changed";
         } else {
-          newStatus[currency] = "green";
+          newStatus[currency] = "unchanged";
         }
         setTimeout(() => {
           setCurrencyStatus((prev) => ({ ...prev, [currency]: "" }));
@@ -147,13 +148,15 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
           )}
         </>
       )}
-      <button
-        className="bpc-refresh"
-        onClick={fetchPrice}
-        disabled={isButtonDisabled}
-      >
-        {btnText}
-      </button>
+      {incBtn && (
+        <button
+          className="bpc-refresh"
+          onClick={fetchPrice}
+          disabled={isButtonDisabled}
+        >
+          {btnText}
+        </button>
+      )}
     </div>
   );
 };

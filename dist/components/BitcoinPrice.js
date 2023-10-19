@@ -38,7 +38,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
-require("../BitcoinCommon.css");
 const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
 function formatCurrency(value) {
     if (value === undefined) {
@@ -50,7 +49,7 @@ function formatCurrency(value) {
     }).format(value);
 }
 const BitcoinPrice = (props) => {
-    const { label = "Bitcoin Price Data:", btnText = "Refresh", incLabel = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
+    const { label = "Bitcoin Price Data:", btnText = "Refresh", incLabel = true, incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
     const [data, setData] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
     const [error, setError] = (0, react_1.useState)(null);
@@ -71,7 +70,7 @@ const BitcoinPrice = (props) => {
                     newStatus[currency] = "changed";
                 }
                 else {
-                    newStatus[currency] = "green";
+                    newStatus[currency] = "unchanged";
                 }
                 setTimeout(() => {
                     setCurrencyStatus((prev) => (Object.assign(Object.assign({}, prev), { [currency]: "" })));
@@ -124,6 +123,6 @@ const BitcoinPrice = (props) => {
                 react_1.default.createElement("strong", null, "Disclaimer:"),
                 " ",
                 data.disclaimer)))),
-        react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice, disabled: isButtonDisabled }, btnText)));
+        incBtn && (react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice, disabled: isButtonDisabled }, btnText))));
 };
 exports.default = BitcoinPrice;

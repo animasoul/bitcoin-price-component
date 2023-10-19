@@ -3,7 +3,8 @@ div.bitcoin-price-component {
   border-radius: 4px;
   padding: 10px;
   text-align: center;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto;
   margin-top: 20px;
   margin-bottom: 20px; }
@@ -20,3 +21,16 @@ div.bitcoin-price-component {
     div.bitcoin-price-component button.bpc-refresh:hover {
       background-color: #aaa;
       border: 1px solid #aaa; }
+  div.bitcoin-price-component .bpc-refresh:disabled {
+    background-color: grey;
+    cursor: not-allowed; }
+  div.bitcoin-price-component .bpc-USD.changed,
+  div.bitcoin-price-component .bpc-GBP.changed,
+  div.bitcoin-price-component .bpc-EUR.changed {
+    color: red;
+    transition: color 2s ease-out; }
+  div.bitcoin-price-component .bpc-USD.unchanged,
+  div.bitcoin-price-component .bpc-GBP.unchanged,
+  div.bitcoin-price-component .bpc-EUR.unchanged {
+    color: green;
+    transition: color 2s ease-out; }
