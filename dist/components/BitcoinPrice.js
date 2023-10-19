@@ -38,8 +38,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
+require("../BitcoinCommon.css");
 const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
-// Format currency values
 function formatCurrency(value) {
     if (value === undefined) {
         return "N/A";
@@ -49,20 +49,44 @@ function formatCurrency(value) {
         maximumFractionDigits: 2,
     }).format(value);
 }
-const BitcoinPrice = ({ label = "Bitcoin Price Data:", btnText = "Refresh", incLabel = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, }) => {
+const BitcoinPrice = (props) => {
+    const { label = "Bitcoin Price Data:", btnText = "Refresh", incLabel = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
     const [data, setData] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
     const [error, setError] = (0, react_1.useState)(null);
-    // Fetch Bitcoin price data
+    const [isButtonDisabled, setButtonDisabled] = (0, react_1.useState)(false);
+    const [currencyStatus, setCurrencyStatus] = (0, react_1.useState)({ USD: "", GBP: "", EUR: "" });
+    const prevRatesRef = (0, react_1.useRef)({});
     const fetchPrice = () => __awaiter(void 0, void 0, void 0, function* () {
         setLoading(true);
         setError(null);
+        setButtonDisabled(true);
+        setTimeout(() => setButtonDisabled(false), 3000);
         try {
             const response = yield axios_1.default.get(API_ENDPOINT);
-            setData(response.data);
+            const newData = response.data;
+            const newStatus = {};
+            ["USD", "GBP", "EUR"].forEach((currency) => {
+                if (prevRatesRef.current[currency] !== newData.bpi[currency].rate_float) {
+                    newStatus[currency] = "changed";
+                }
+                else {
+                    newStatus[currency] = "green";
+                }
+                setTimeout(() => {
+                    setCurrencyStatus((prev) => (Object.assign(Object.assign({}, prev), { [currency]: "" })));
+                }, 2000);
+            });
+            setCurrencyStatus(newStatus);
+            prevRatesRef.current = {
+                USD: newData.bpi.USD.rate_float,
+                GBP: newData.bpi.GBP.rate_float,
+                EUR: newData.bpi.EUR.rate_float,
+            };
+            setData(newData);
         }
-        catch (error) {
-            console.error("Error fetching Bitcoin price:", error);
+        catch (err) {
+            console.error("Error fetching Bitcoin price:", err);
             setError("Failed to fetch Bitcoin price data.");
         }
         finally {
@@ -85,14 +109,12 @@ const BitcoinPrice = ({ label = "Bitcoin Price Data:", btnText = "Refresh", incL
                 Object.keys(data.bpi).map((currencyCode) => {
                     if ((currencyCode === "USD" && !incUSD) ||
                         (currencyCode === "GBP" && !incGBP) ||
-                        (currencyCode === "EUR" && !incEUR)) {
-                        return null; // Do not render this currency
-                    }
-                    return (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode}` },
+                        (currencyCode === "EUR" && !incEUR))
+                        return null;
+                    return (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode} ${currencyStatus[currencyCode]}` },
                         react_1.default.createElement("strong", null,
                             currencyCode,
                             ":"),
-                        " ",
                         react_1.default.createElement("span", { dangerouslySetInnerHTML: {
                                 __html: data.bpi[currencyCode].symbol,
                             } }),
@@ -102,6 +124,6 @@ const BitcoinPrice = ({ label = "Bitcoin Price Data:", btnText = "Refresh", incL
                 react_1.default.createElement("strong", null, "Disclaimer:"),
                 " ",
                 data.disclaimer)))),
-        react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice }, btnText)));
+        react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice, disabled: isButtonDisabled }, btnText)));
 };
 exports.default = BitcoinPrice;

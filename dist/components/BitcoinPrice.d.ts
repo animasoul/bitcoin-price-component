@@ -1,4 +1,5 @@
 import React from "react";
+import "../BitcoinCommon.css";
 interface BitcoinPriceProps {
     label?: string;
     btnText?: string;
