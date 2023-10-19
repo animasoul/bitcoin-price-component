@@ -1,0 +1,11 @@
+
+jest.config.js
+/__tests__/
+/__mocks__/
+/docs/
+README-dev.md
+.git/
+.gitignore
+.npmignore
+.vscode/
+/node_modules/
