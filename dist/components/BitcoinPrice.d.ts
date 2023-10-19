@@ -1,5 +1,5 @@
 import React from "react";
-import "../dist/BitcoinPrice.css";
+import "../BitcoinPrice.css";
 interface BitcoinPriceProps {
     label?: string;
 }

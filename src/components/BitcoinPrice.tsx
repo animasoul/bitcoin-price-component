@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../dist/BitcoinPrice.css";
+import "../BitcoinPrice.css";
 
 const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
 
