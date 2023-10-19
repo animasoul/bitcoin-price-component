@@ -1,5 +1,4 @@
-div.bitcoin-price-component .bpc-refresh:disabled,
-div.bitcoin-price-component .bpc-refresh.disabled {
+div.bitcoin-price-component .bpc-refresh:disabled {
   background-color: grey;
   cursor: not-allowed; }
 
@@ -12,4 +11,5 @@ div.bitcoin-price-component .bpc-EUR.changed {
 div.bitcoin-price-component .bpc-USD.green,
 div.bitcoin-price-component .bpc-GBP.green,
 div.bitcoin-price-component .bpc-EUR.green {
-  color: green; }
+  color: green;
+  transition: color 2s ease-out; }

@@ -114,7 +114,7 @@ const BitcoinPrice = (props) => {
                     return (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode} ${currencyStatus[currencyCode]}` },
                         react_1.default.createElement("strong", null,
                             currencyCode,
-                            ":"),
+                            ": "),
                         react_1.default.createElement("span", { dangerouslySetInnerHTML: {
                                 __html: data.bpi[currencyCode].symbol,
                             } }),

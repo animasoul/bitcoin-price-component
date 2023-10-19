@@ -130,7 +130,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
                   key={currencyCode}
                   className={`bpc-${currencyCode} ${currencyStatus[currencyCode]}`}
                 >
-                  <strong>{currencyCode}:</strong>
+                  <strong>{currencyCode}: </strong>
                   <span
                     dangerouslySetInnerHTML={{
                       __html: data.bpi[currencyCode].symbol,
