@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-price-component",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Bitcoin Price Component for React",
   "main": "dist/components/BitcoinPrice.js",
   "types": "dist/components/BitcoinPrice.d.ts",
