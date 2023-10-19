@@ -1,5 +1,5 @@
 "use strict";
-'use client';
+"use client";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -38,26 +38,61 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
-const API_ENDPOINT = 'https://api.coindesk.com/v1/bpi/currentprice.json';
-const BitcoinPrice = () => {
-    const [price, setPrice] = (0, react_1.useState)(null);
+const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
+function formatCurrency(value) {
+    if (value === undefined) {
+        return "0.00";
+    }
+    return new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(value);
+}
+// ... (the rest of the imports and interfaces remain the same)
+const BitcoinPrice = ({ label = "Bitcoin Price Data:", }) => {
+    const [data, setData] = (0, react_1.useState)(null);
+    const [loading, setLoading] = (0, react_1.useState)(true);
+    const fetchPrice = () => __awaiter(void 0, void 0, void 0, function* () {
+        setLoading(true);
+        try {
+            const response = yield axios_1.default.get(API_ENDPOINT, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            setData(response.data);
+        }
+        catch (error) {
+            console.error("Error fetching Bitcoin price:", error);
+        }
+        finally {
+            setLoading(false);
+        }
+    });
     (0, react_1.useEffect)(() => {
-        const fetchPrice = () => __awaiter(void 0, void 0, void 0, function* () {
-            try {
-                const response = yield axios_1.default.get(API_ENDPOINT, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // other headers if needed
-                    }
-                });
-                setPrice(response.data.bpi.USD.rate_float);
-            }
-            catch (error) {
-                console.error('Error fetching Bitcoin price:', error);
-            }
-        });
         fetchPrice();
     }, []);
-    return (react_1.default.createElement("div", null, price ? `Current Bitcoin Price: $${price}` : 'Fetching Bitcoin price...'));
+    return (react_1.default.createElement("div", { className: "bitcoin-price-component" },
+        react_1.default.createElement("h3", { className: "bpc-label" }, label),
+        loading ? ("Fetching Bitcoin price...") : (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("p", { className: "bpc-updated" },
+                react_1.default.createElement("strong", null, "Updated:"),
+                " ", data === null || data === void 0 ? void 0 :
+                data.time.updated),
+            (data === null || data === void 0 ? void 0 : data.bpi) &&
+                Object.keys(data.bpi).map((currencyCode) => (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode}` },
+                    react_1.default.createElement("strong", null,
+                        currencyCode,
+                        ":"),
+                    " ",
+                    react_1.default.createElement("span", { dangerouslySetInnerHTML: {
+                            __html: data.bpi[currencyCode].symbol,
+                        } }),
+                    formatCurrency(data.bpi[currencyCode].rate_float)))),
+            react_1.default.createElement("p", { className: "bpc-disclaimer" },
+                react_1.default.createElement("strong", null, "Disclaimer:"),
+                " ", data === null || data === void 0 ? void 0 :
+                data.disclaimer))),
+        react_1.default.createElement("button", { className: "bpc-refresh", onClick: fetchPrice }, "Refresh")));
 };
 exports.default = BitcoinPrice;

@@ -1,13 +1,19 @@
 {
   "name": "bitcoin-price-component",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Bitcoin Price Component for React",
   "main": "dist/components/BitcoinPrice.js",
   "types": "dist/components/BitcoinPrice.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["bitcoin", "react", "component", "price", "axios"],
+  "keywords": [
+    "bitcoin",
+    "react",
+    "component",
+    "price",
+    "axios"
+  ],
   "author": "Abel Rogers <abel.rogers@gmail.com> (https://www.ajpartnersltd.com/)",
   "license": "ISC",
   "dependencies": {
