@@ -18,6 +18,12 @@ Import the component into your React app:
 import BitcoinPrice from 'bitcoin-price-component';
 ```
 
+You can include some basic css for styling (optional)
+
+```bash
+import 'bitcoin-price-component/dist/BitcoinPrice.css';
+```
+
 Then use it in your component:
 \*\*note: Label is not necessary, if ommited will default to "Bitcoin Price Data:"
 
