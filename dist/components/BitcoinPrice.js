@@ -38,6 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const axios_1 = __importDefault(require("axios"));
+require("../dist/BitcoinPrice.css");
 const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
 function formatCurrency(value) {
     if (value === undefined) {
