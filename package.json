@@ -21,5 +21,9 @@
     "@types/react-dom": "^18.2.13",
     "typescript": "^5.2.2"
   },
-  "homepage": "https://layerfi.meta.mt/"
+  "homepage": "https://layerfi.meta.mt/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/animasoul/bitcoin-price-component"
+  }
 }
