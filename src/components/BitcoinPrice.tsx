@@ -62,7 +62,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
   const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
   const [currencyStatus, setCurrencyStatus] = useState<{
-    [key: string]: "changed" | "unchanged" | "";
+    [key: string]: "increased" | "decreased" | "unchanged" | "";
   }>({ USD: "", GBP: "", EUR: "" });
 
   const prevRatesRef = useRef<{ [key: string]: number }>({});
@@ -78,16 +78,25 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
     try {
       const response = await axios.get(API_ENDPOINT);
       const newData = response.data;
-      const newStatus: { [key: string]: "changed" | "unchanged" | "" } = {};
+      const newStatus: {
+        [key: string]: "increased" | "decreased" | "unchanged" | "";
+      } = {};
 
       ["USD", "GBP", "EUR"].forEach((currency) => {
-        if (
-          prevRatesRef.current[currency] !== newData.bpi[currency].rate_float
+        if (prevRatesRef.current[currency] === undefined) {
+          newStatus[currency] = "";
+        } else if (
+          prevRatesRef.current[currency] < newData.bpi[currency].rate_float
         ) {
-          newStatus[currency] = "changed";
+          newStatus[currency] = "increased";
+        } else if (
+          prevRatesRef.current[currency] > newData.bpi[currency].rate_float
+        ) {
+          newStatus[currency] = "decreased";
         } else {
           newStatus[currency] = "unchanged";
         }
+
         setTimeout(() => {
           setCurrencyStatus((prev) => ({ ...prev, [currency]: "" }));
         }, 2000);
@@ -140,6 +149,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
                 >
                   <strong>{currencyCode}: </strong>
                   <span
+                    className="rate-placeholder"
                     dangerouslySetInnerHTML={{
                       __html: data.bpi[currencyCode].symbol,
                     }}

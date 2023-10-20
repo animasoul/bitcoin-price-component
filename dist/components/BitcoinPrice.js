@@ -68,8 +68,14 @@ const BitcoinPrice = (props) => {
             const newData = response.data;
             const newStatus = {};
             ["USD", "GBP", "EUR"].forEach((currency) => {
-                if (prevRatesRef.current[currency] !== newData.bpi[currency].rate_float) {
-                    newStatus[currency] = "changed";
+                if (prevRatesRef.current[currency] === undefined) {
+                    newStatus[currency] = "";
+                }
+                else if (prevRatesRef.current[currency] < newData.bpi[currency].rate_float) {
+                    newStatus[currency] = "increased";
+                }
+                else if (prevRatesRef.current[currency] > newData.bpi[currency].rate_float) {
+                    newStatus[currency] = "decreased";
                 }
                 else {
                     newStatus[currency] = "unchanged";
@@ -116,7 +122,7 @@ const BitcoinPrice = (props) => {
                         react_1.default.createElement("strong", null,
                             currencyCode,
                             ": "),
-                        react_1.default.createElement("span", { dangerouslySetInnerHTML: {
+                        react_1.default.createElement("span", { className: "rate-placeholder", dangerouslySetInnerHTML: {
                                 __html: data.bpi[currencyCode].symbol,
                             } }),
                         formatCurrency(data.bpi[currencyCode].rate_float)));

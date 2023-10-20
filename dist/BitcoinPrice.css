@@ -28,10 +28,16 @@ button.bpc-refresh {
   background-color: grey;
   cursor: not-allowed; }
 
-.bpc-USD.changed,
-.bpc-GBP.changed,
-.bpc-EUR.changed {
+.bpc-USD.increased,
+.bpc-GBP.increased,
+.bpc-EUR.increased {
   color: red;
+  transition: color 2s ease-out; }
+
+.bpc-USD.decreased,
+.bpc-GBP.decreased,
+.bpc-EUR.decreased {
+  color: yellow;
   transition: color 2s ease-out; }
 
 .bpc-USD.unchanged,

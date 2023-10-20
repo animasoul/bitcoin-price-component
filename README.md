@@ -50,9 +50,9 @@ function App() {
 }
 ```
 
-## Updated prices (changed, unChanged)
+## Updated prices (increased, decreased or unchanged)
 
-When the prices or date has changed an item attribute class of 'changed' or 'unChanged' is placed on the item for 2 seconds, this is so it can be styled, e.g. apply css green for .unChanged or red for .changed
+When updating/refreshing, an item attribute class of 'increased', 'decreased' or 'unchanged' is placed on the item for 2 seconds, this is so it can be styled, e.g. apply css green for .unchanged, red for .increased, yellow for .decreased
 
 The button will also have disabled attribute for 3 seconds to avoid multiple clicking
 

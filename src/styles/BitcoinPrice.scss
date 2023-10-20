@@ -33,8 +33,12 @@ button.bpc-refresh {
 .bpc-USD,
 .bpc-GBP,
 .bpc-EUR {
-  &.changed {
+  &.increased {
     color: red;
+    transition: color 2s ease-out;
+  }
+  &.decreased {
+    color: yellow;
     transition: color 2s ease-out;
   }
 
