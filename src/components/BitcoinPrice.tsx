@@ -23,6 +23,7 @@ interface BitcoinPriceProps {
   labelLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   btnText?: string;
   incLabel?: boolean;
+  txtHtml?: "p" | "span" | "div";
   incBtn?: boolean;
   incUSD?: boolean;
   incGBP?: boolean;
@@ -47,6 +48,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
     labelLevel = "h3",
     btnText = "Refresh",
     incLabel = true,
+    txtHtml = "p",
     incBtn = true,
     incUSD = true,
     incGBP = true,
@@ -66,6 +68,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
   const prevRatesRef = useRef<{ [key: string]: number }>({});
 
   const DynamicTag = labelLevel as keyof JSX.IntrinsicElements;
+  const DynamicHtml = txtHtml as keyof JSX.IntrinsicElements;
 
   const fetchPrice = async () => {
     setLoading(true);
@@ -113,13 +116,13 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
     <div className="bitcoin-price-component">
       {incLabel && <DynamicTag className="bpc-label">{label}</DynamicTag>}
       {loading && "Fetching Bitcoin price..."}
-      {error && <p className="bpc-error">{error}</p>}
+      {error && <DynamicHtml className="bpc-error">{error}</DynamicHtml>}
       {!loading && !error && (
         <>
           {incUpdateTime && data?.time.updated && (
-            <p className="bpc-updated">
+            <DynamicHtml className="bpc-updated">
               <strong>Updated:</strong> {data.time.updated}
-            </p>
+            </DynamicHtml>
           )}
           {data?.bpi &&
             Object.keys(data.bpi).map((currencyCode) => {
@@ -131,7 +134,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
                 return null;
 
               return (
-                <p
+                <DynamicHtml
                   key={currencyCode}
                   className={`bpc-${currencyCode} ${currencyStatus[currencyCode]}`}
                 >
@@ -142,13 +145,13 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
                     }}
                   />
                   {formatCurrency(data.bpi[currencyCode].rate_float)}
-                </p>
+                </DynamicHtml>
               );
             })}
           {incDisclaimer && data?.disclaimer && (
-            <p className="bpc-disclaimer">
+            <DynamicHtml className="bpc-disclaimer">
               <strong>Disclaimer:</strong> {data.disclaimer}
-            </p>
+            </DynamicHtml>
           )}
         </>
       )}

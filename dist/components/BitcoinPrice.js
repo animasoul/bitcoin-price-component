@@ -49,7 +49,7 @@ function formatCurrency(value) {
     }).format(value);
 }
 const BitcoinPrice = (props) => {
-    const { label = "Bitcoin Price Data:", labelLevel = "h3", btnText = "Refresh", incLabel = true, incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
+    const { label = "Bitcoin Price Data:", labelLevel = "h3", btnText = "Refresh", incLabel = true, txtHtml = "p", incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
     const [data, setData] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
     const [error, setError] = (0, react_1.useState)(null);
@@ -57,6 +57,7 @@ const BitcoinPrice = (props) => {
     const [currencyStatus, setCurrencyStatus] = (0, react_1.useState)({ USD: "", GBP: "", EUR: "" });
     const prevRatesRef = (0, react_1.useRef)({});
     const DynamicTag = labelLevel;
+    const DynamicHtml = txtHtml;
     const fetchPrice = () => __awaiter(void 0, void 0, void 0, function* () {
         setLoading(true);
         setError(null);
@@ -99,9 +100,9 @@ const BitcoinPrice = (props) => {
     return (react_1.default.createElement("div", { className: "bitcoin-price-component" },
         incLabel && react_1.default.createElement(DynamicTag, { className: "bpc-label" }, label),
         loading && "Fetching Bitcoin price...",
-        error && react_1.default.createElement("p", { className: "bpc-error" }, error),
+        error && react_1.default.createElement(DynamicHtml, { className: "bpc-error" }, error),
         !loading && !error && (react_1.default.createElement(react_1.default.Fragment, null,
-            incUpdateTime && (data === null || data === void 0 ? void 0 : data.time.updated) && (react_1.default.createElement("p", { className: "bpc-updated" },
+            incUpdateTime && (data === null || data === void 0 ? void 0 : data.time.updated) && (react_1.default.createElement(DynamicHtml, { className: "bpc-updated" },
                 react_1.default.createElement("strong", null, "Updated:"),
                 " ",
                 data.time.updated)),
@@ -111,7 +112,7 @@ const BitcoinPrice = (props) => {
                         (currencyCode === "GBP" && !incGBP) ||
                         (currencyCode === "EUR" && !incEUR))
                         return null;
-                    return (react_1.default.createElement("p", { key: currencyCode, className: `bpc-${currencyCode} ${currencyStatus[currencyCode]}` },
+                    return (react_1.default.createElement(DynamicHtml, { key: currencyCode, className: `bpc-${currencyCode} ${currencyStatus[currencyCode]}` },
                         react_1.default.createElement("strong", null,
                             currencyCode,
                             ": "),
@@ -120,7 +121,7 @@ const BitcoinPrice = (props) => {
                             } }),
                         formatCurrency(data.bpi[currencyCode].rate_float)));
                 }),
-            incDisclaimer && (data === null || data === void 0 ? void 0 : data.disclaimer) && (react_1.default.createElement("p", { className: "bpc-disclaimer" },
+            incDisclaimer && (data === null || data === void 0 ? void 0 : data.disclaimer) && (react_1.default.createElement(DynamicHtml, { className: "bpc-disclaimer" },
                 react_1.default.createElement("strong", null, "Disclaimer:"),
                 " ",
                 data.disclaimer)))),

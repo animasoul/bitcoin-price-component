@@ -2,7 +2,7 @@
 
 ![React Logo](https://reactjs.org/logo-og.png) ![Axios Logo](https://axios-http.com/assets/logo.png)
 
-This is a simple React component to display the current Bitcoin price using the [Coindesk API](https://api.coindesk.com/v1/bpi/currentprice.json).
+This is a simple (but customisable) React component to display the current Bitcoin price using the [Coindesk API](https://api.coindesk.com/v1/bpi/currentprice.json).
 
 ## Installation
 
@@ -37,6 +37,7 @@ function App() {
           btnText="Refresh"
           labelLevel="h3" // options "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
           incLabel={true}
+          txtHtml="p" //options "p" | "span" | "div";
           incBtn={true}
           incUSD={true}
           incGBP={true}
@@ -48,6 +49,12 @@ function App() {
   );
 }
 ```
+
+## Updated prices (changed, unChanged)
+
+When the prices or date has changed an item attribute class of 'changed' or 'unChanged' is placed on the item for 2 seconds, this is so it can be styled, e.g. apply css green for .unChanged or red for .changed
+
+The button will also have disabled attribute for 3 seconds to avoid multiple clicking
 
 ## Live Demo
 

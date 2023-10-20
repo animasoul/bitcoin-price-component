@@ -1,4 +1,4 @@
-div.bitcoin-price-component {
+.bitcoin-price-component {
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 10px;
@@ -8,38 +8,38 @@ div.bitcoin-price-component {
   margin: 0 auto;
   margin-top: 20px;
   margin-bottom: 20px;
-  p.bpc-disclaimer {
-    font-size: 0.65em;
+}
+.bpc-disclaimer {
+  font-size: 0.65em;
+}
+button.bpc-refresh {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #000;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 5px 10px;
+  &:hover {
+    background-color: #aaa;
+    border: 1px solid #aaa;
   }
-  button.bpc-refresh {
-    background-color: #ccc;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #000;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 5px 10px;
-    &:hover {
-      background-color: #aaa;
-      border: 1px solid #aaa;
-    }
-  }
-  .bpc-refresh:disabled {
-    background-color: grey;
-    cursor: not-allowed;
+}
+.bpc-refresh:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.bpc-USD,
+.bpc-GBP,
+.bpc-EUR {
+  &.changed {
+    color: red;
+    transition: color 2s ease-out;
   }
 
-  .bpc-USD,
-  .bpc-GBP,
-  .bpc-EUR {
-    &.changed {
-      color: red;
-      transition: color 2s ease-out;
-    }
-
-    &.unchanged {
-      color: green;
-      transition: color 2s ease-out;
-    }
+  &.unchanged {
+    color: green;
+    transition: color 2s ease-out;
   }
 }
