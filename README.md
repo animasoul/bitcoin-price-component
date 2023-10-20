@@ -54,7 +54,49 @@ function App() {
 
 When updating/refreshing, an item attribute class of 'increased', 'decreased' or 'unchanged' is placed on the item for 2 seconds, this is so it can be styled, e.g. apply css green for .unchanged, red for .increased, yellow for .decreased
 
+For example:
+
+```bash
+.increased {
+  color: red;
+  transition: color 0.5s ease-out; }
+.increased::after {
+  content: " ↑"; }
+
+.decreased {
+  color: yellow;
+  transition: color 0.5s ease-out; }
+.decreased::after {
+  content: " ↓"; }
+
+.unchanged {
+  color: green;
+  transition: color 0.5s ease-out; }
+.unchanged::after {
+  content: " ↔"; }
+```
+
 The button will also have disabled attribute for 3 seconds to avoid multiple clicking
+
+Example button css
+
+```bash
+button.bpc-refresh {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #000;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 5px 10px; }
+  button.bpc-refresh:hover {
+    background-color: #aaa;
+    border: 1px solid #aaa; }
+
+.bpc-refresh:disabled {
+  background-color: grey;
+  cursor: not-allowed; }
+```
 
 ## Live Demo
 
