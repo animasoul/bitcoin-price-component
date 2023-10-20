@@ -127,8 +127,9 @@ function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
     setButtonDisabled(true);
     setTimeout(() => setButtonDisabled(false), 3000);
 
-    try {
-      const newData = await fetchBitcoinPrice();
+    const { data: newData, error: fetchError } = await fetchBitcoinPrice();
+
+    if (newData) {
       setData(newData);
       setUpdatedTime(newData.time.updated);
       setRates(newData.bpi);
@@ -142,22 +143,11 @@ function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
         GBP: newData.bpi.GBP.rate_float,
         EUR: newData.bpi.EUR.rate_float,
       };
-    } catch (err) {
-      if (typeof err === "object" && err !== null && "response" in err) {
-        // Server responded with a status other than 200 range
-        const errorResponse = err as { response: { status: number } };
-        setError(`Server Error: ${errorResponse.response.status}`);
-      } else if (typeof err === "object" && err !== null && "request" in err) {
-        // No response was received, possible network error
-        setError("Network Error. Please check your connection.");
-      } else {
-        // Something else caused the error
-        setError("Failed to fetch Bitcoin price data.");
-      }
-      console.error("Error fetching Bitcoin price:", err);
-    } finally {
-      setLoading(false);
+    } else if (fetchError) {
+      setError(fetchError);
     }
+
+    setLoading(false);
   }, [determineCurrencyStatus]);
 
   useEffect(() => {

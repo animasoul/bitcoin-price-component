@@ -102,8 +102,8 @@ function BitcoinPrice(props) {
         setError(null);
         setButtonDisabled(true);
         setTimeout(() => setButtonDisabled(false), 3000);
-        try {
-            const newData = yield (0, bitcoinService_1.fetchBitcoinPrice)();
+        const { data: newData, error: fetchError } = yield (0, bitcoinService_1.fetchBitcoinPrice)();
+        if (newData) {
             setData(newData);
             setUpdatedTime(newData.time.updated);
             setRates(newData.bpi);
@@ -116,25 +116,10 @@ function BitcoinPrice(props) {
                 EUR: newData.bpi.EUR.rate_float,
             };
         }
-        catch (err) {
-            if (typeof err === "object" && err !== null && "response" in err) {
-                // Server responded with a status other than 200 range
-                const errorResponse = err;
-                setError(`Server Error: ${errorResponse.response.status}`);
-            }
-            else if (typeof err === "object" && err !== null && "request" in err) {
-                // No response was received, possible network error
-                setError("Network Error. Please check your connection.");
-            }
-            else {
-                // Something else caused the error
-                setError("Failed to fetch Bitcoin price data.");
-            }
-            console.error("Error fetching Bitcoin price:", err);
+        else if (fetchError) {
+            setError(fetchError);
         }
-        finally {
-            setLoading(false);
-        }
+        setLoading(false);
     }), [determineCurrencyStatus]);
     (0, react_1.useEffect)(() => {
         fetchPrice();

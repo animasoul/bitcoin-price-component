@@ -5,8 +5,7 @@
   "main": "dist/components/BitcoinPrice.js",
   "types": "dist/components/BitcoinPrice.d.ts",
   "files": [
-    "dist/BitcoinPrice.js",
-    "dist/BitcoinPrice.d.ts"
+    "dist/"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
