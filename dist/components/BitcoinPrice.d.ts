@@ -12,5 +12,6 @@ interface BitcoinPriceProps {
     incDisclaimer?: boolean;
     incUpdateTime?: boolean;
 }
-declare const BitcoinPrice: React.FC<BitcoinPriceProps>;
-export default BitcoinPrice;
+declare function BitcoinPrice(props: BitcoinPriceProps): JSX.Element;
+declare const _default: React.MemoExoticComponent<typeof BitcoinPrice>;
+export default _default;

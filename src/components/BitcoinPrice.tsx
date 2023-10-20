@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
-
-const API_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { fetchBitcoinPrice } from "./helpers/bitcoinService";
+import UpdateTime from "./helpers/UpdateTime";
+import CurrencyRate from "./helpers/CurrencyRate";
 
 interface BitcoinData {
   time: {
@@ -42,7 +42,15 @@ function formatCurrency(value: number | undefined): string {
   }).format(value);
 }
 
-const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
+const DEBOUNCE_TIME = 1000; // 1 second delay for debounce
+const CURRENCIES = ["USD", "GBP", "EUR"];
+type CurrencyStatus = Record<
+  string,
+  "" | "increased" | "decreased" | "unchanged"
+>;
+
+function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
+  // Destructuring props with defaults
   const {
     label = "Bitcoin Price Data:",
     labelLevel = "h3",
@@ -57,32 +65,27 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
     incUpdateTime = true,
   } = props;
 
+  // State and Refs
+  const [updatedTime, setUpdatedTime] = useState<string | null>(null);
+  const [rates, setRates] = useState<BitcoinData["bpi"] | null>(null);
   const [data, setData] = useState<BitcoinData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
-  const [currencyStatus, setCurrencyStatus] = useState<{
-    [key: string]: "increased" | "decreased" | "unchanged" | "";
-  }>({ USD: "", GBP: "", EUR: "" });
+  const [currencyStatus, setCurrencyStatus] = useState<CurrencyStatus>({});
+  const prevRatesRef = useRef<Record<string, number>>({});
+  const lastClickedRef = useRef<number | null>(null);
 
-  const prevRatesRef = useRef<{ [key: string]: number }>({});
-
+  // Dynamic JSX tags based on props
   const DynamicTag = labelLevel as keyof JSX.IntrinsicElements;
   const DynamicHtml = txtHtml as keyof JSX.IntrinsicElements;
 
-  const fetchPrice = async () => {
-    setLoading(true);
-    setError(null);
-    setButtonDisabled(true);
-    setTimeout(() => setButtonDisabled(false), 3000);
-    try {
-      const response = await axios.get(API_ENDPOINT);
-      const newData = response.data;
-      const newStatus: {
-        [key: string]: "increased" | "decreased" | "unchanged" | "";
-      } = {};
+  // Methods
+  const determineCurrencyStatus = useCallback(
+    (newData: BitcoinData): CurrencyStatus => {
+      const newStatus: CurrencyStatus = {};
 
-      ["USD", "GBP", "EUR"].forEach((currency) => {
+      CURRENCIES.forEach((currency) => {
         if (prevRatesRef.current[currency] === undefined) {
           newStatus[currency] = "";
         } else if (
@@ -102,25 +105,66 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
         }, 2000);
       });
 
+      return newStatus;
+    },
+    [setCurrencyStatus]
+  );
+
+  const fetchPrice = useCallback(async () => {
+    // Handle debounce
+    const now = Date.now();
+    if (
+      lastClickedRef.current &&
+      now - lastClickedRef.current < DEBOUNCE_TIME
+    ) {
+      return;
+    }
+    lastClickedRef.current = now;
+
+    // Fetch logic
+    setLoading(true);
+    setError(null);
+    setButtonDisabled(true);
+    setTimeout(() => setButtonDisabled(false), 3000);
+
+    try {
+      const newData = await fetchBitcoinPrice();
+      setData(newData);
+      setUpdatedTime(newData.time.updated);
+      setRates(newData.bpi);
+
+      const newStatus = determineCurrencyStatus(newData);
       setCurrencyStatus(newStatus);
+
+      // Update previous rates for future comparison
       prevRatesRef.current = {
         USD: newData.bpi.USD.rate_float,
         GBP: newData.bpi.GBP.rate_float,
         EUR: newData.bpi.EUR.rate_float,
       };
-      setData(newData);
     } catch (err) {
+      if (typeof err === "object" && err !== null && "response" in err) {
+        // Server responded with a status other than 200 range
+        const errorResponse = err as { response: { status: number } };
+        setError(`Server Error: ${errorResponse.response.status}`);
+      } else if (typeof err === "object" && err !== null && "request" in err) {
+        // No response was received, possible network error
+        setError("Network Error. Please check your connection.");
+      } else {
+        // Something else caused the error
+        setError("Failed to fetch Bitcoin price data.");
+      }
       console.error("Error fetching Bitcoin price:", err);
-      setError("Failed to fetch Bitcoin price data.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [determineCurrencyStatus]);
 
   useEffect(() => {
     fetchPrice();
-  }, []);
+  }, [fetchPrice]);
 
+  // Rendering
   return (
     <div className="bitcoin-price-component">
       {incLabel && <DynamicTag className="bpc-label">{label}</DynamicTag>}
@@ -128,36 +172,26 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
       {error && <DynamicHtml className="bpc-error">{error}</DynamicHtml>}
       {!loading && !error && (
         <>
-          {incUpdateTime && data?.time.updated && (
-            <DynamicHtml className="bpc-updated">
-              <strong>Updated:</strong> {data.time.updated}
-            </DynamicHtml>
+          {incUpdateTime && updatedTime && (
+            <UpdateTime time={updatedTime} tag={txtHtml} />
           )}
-          {data?.bpi &&
-            Object.keys(data.bpi).map((currencyCode) => {
-              if (
-                (currencyCode === "USD" && !incUSD) ||
-                (currencyCode === "GBP" && !incGBP) ||
-                (currencyCode === "EUR" && !incEUR)
-              )
-                return null;
-
+          {rates &&
+            CURRENCIES.filter((currency) => {
               return (
-                <DynamicHtml
-                  key={currencyCode}
-                  className={`bpc-${currencyCode} ${currencyStatus[currencyCode]}`}
-                >
-                  <strong>{currencyCode}: </strong>
-                  <span
-                    className="rate-placeholder"
-                    dangerouslySetInnerHTML={{
-                      __html: data.bpi[currencyCode].symbol,
-                    }}
-                  />
-                  {formatCurrency(data.bpi[currencyCode].rate_float)}
-                </DynamicHtml>
+                (currency === "USD" && incUSD) ||
+                (currency === "GBP" && incGBP) ||
+                (currency === "EUR" && incEUR)
               );
-            })}
+            }).map((currencyCode) => (
+              <CurrencyRate
+                key={currencyCode}
+                currencyCode={currencyCode}
+                symbol={rates[currencyCode].symbol}
+                rate={formatCurrency(rates[currencyCode].rate_float)}
+                status={currencyStatus[currencyCode]}
+                tag={txtHtml}
+              />
+            ))}
           {incDisclaimer && data?.disclaimer && (
             <DynamicHtml className="bpc-disclaimer">
               <strong>Disclaimer:</strong> {data.disclaimer}
@@ -176,6 +210,6 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
       )}
     </div>
   );
-};
+}
 
-export default BitcoinPrice;
+export default React.memo(BitcoinPrice);

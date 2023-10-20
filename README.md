@@ -4,6 +4,8 @@
 
 This is a simple (but customisable) React component to display the current Bitcoin price using the [Coindesk API](https://api.coindesk.com/v1/bpi/currentprice.json).
 
+No styles or fancy javascript animations!
+
 ## Installation
 
 ```bash
