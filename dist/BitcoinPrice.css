@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .bitcoin-price-component {
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -28,20 +29,20 @@ button.bpc-refresh {
   background-color: grey;
   cursor: not-allowed; }
 
-.bpc-USD.increased,
-.bpc-GBP.increased,
-.bpc-EUR.increased {
+.increased {
   color: red;
-  transition: color 2s ease-out; }
+  transition: color 0.5s ease-out; }
+  .increased::after {
+    content: "↑"; }
 
-.bpc-USD.decreased,
-.bpc-GBP.decreased,
-.bpc-EUR.decreased {
+.decreased {
   color: yellow;
-  transition: color 2s ease-out; }
+  transition: color 0.5s ease-out; }
+  .decreased::after {
+    content: "↓"; }
 
-.bpc-USD.unchanged,
-.bpc-GBP.unchanged,
-.bpc-EUR.unchanged {
+.unchanged {
   color: green;
-  transition: color 2s ease-out; }
+  transition: color 0.5s ease-out; }
+  .unchanged::after {
+    content: "→"; }

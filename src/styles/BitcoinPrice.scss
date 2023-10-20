@@ -30,20 +30,25 @@ button.bpc-refresh {
   cursor: not-allowed;
 }
 
-.bpc-USD,
-.bpc-GBP,
-.bpc-EUR {
-  &.increased {
-    color: red;
-    transition: color 2s ease-out;
+.increased {
+  color: red;
+  transition: color 0.5s ease-out;
+  &::after {
+    content: "↑";
   }
-  &.decreased {
-    color: yellow;
-    transition: color 2s ease-out;
+}
+.decreased {
+  color: yellow;
+  transition: color 0.5s ease-out;
+  &::after {
+    content: "↓";
   }
+}
 
-  &.unchanged {
-    color: green;
-    transition: color 2s ease-out;
+.unchanged {
+  color: green;
+  transition: color 0.5s ease-out;
+  &::after {
+    content: "→";
   }
 }
