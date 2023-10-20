@@ -20,6 +20,7 @@ interface BitcoinData {
 
 interface BitcoinPriceProps {
   label?: string;
+  labelLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   btnText?: string;
   incLabel?: boolean;
   incBtn?: boolean;
@@ -43,6 +44,7 @@ function formatCurrency(value: number | undefined): string {
 const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
   const {
     label = "Bitcoin Price Data:",
+    labelLevel = "h3",
     btnText = "Refresh",
     incLabel = true,
     incBtn = true,
@@ -62,6 +64,8 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
   }>({ USD: "", GBP: "", EUR: "" });
 
   const prevRatesRef = useRef<{ [key: string]: number }>({});
+
+  const DynamicTag = labelLevel as keyof JSX.IntrinsicElements;
 
   const fetchPrice = async () => {
     setLoading(true);
@@ -107,7 +111,7 @@ const BitcoinPrice: React.FC<BitcoinPriceProps> = (props) => {
 
   return (
     <div className="bitcoin-price-component">
-      {incLabel && <h3 className="bpc-label">{label}</h3>}
+      {incLabel && <DynamicTag className="bpc-label">{label}</DynamicTag>}
       {loading && "Fetching Bitcoin price..."}
       {error && <p className="bpc-error">{error}</p>}
       {!loading && !error && (

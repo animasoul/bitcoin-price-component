@@ -1,6 +1,7 @@
 import React from "react";
 interface BitcoinPriceProps {
     label?: string;
+    labelLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
     btnText?: string;
     incLabel?: boolean;
     incBtn?: boolean;

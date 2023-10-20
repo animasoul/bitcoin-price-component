@@ -49,13 +49,14 @@ function formatCurrency(value) {
     }).format(value);
 }
 const BitcoinPrice = (props) => {
-    const { label = "Bitcoin Price Data:", btnText = "Refresh", incLabel = true, incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
+    const { label = "Bitcoin Price Data:", labelLevel = "h3", btnText = "Refresh", incLabel = true, incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
     const [data, setData] = (0, react_1.useState)(null);
     const [loading, setLoading] = (0, react_1.useState)(true);
     const [error, setError] = (0, react_1.useState)(null);
     const [isButtonDisabled, setButtonDisabled] = (0, react_1.useState)(false);
     const [currencyStatus, setCurrencyStatus] = (0, react_1.useState)({ USD: "", GBP: "", EUR: "" });
     const prevRatesRef = (0, react_1.useRef)({});
+    const DynamicTag = labelLevel;
     const fetchPrice = () => __awaiter(void 0, void 0, void 0, function* () {
         setLoading(true);
         setError(null);
@@ -96,7 +97,7 @@ const BitcoinPrice = (props) => {
         fetchPrice();
     }, []);
     return (react_1.default.createElement("div", { className: "bitcoin-price-component" },
-        incLabel && react_1.default.createElement("h3", { className: "bpc-label" }, label),
+        incLabel && react_1.default.createElement(DynamicTag, { className: "bpc-label" }, label),
         loading && "Fetching Bitcoin price...",
         error && react_1.default.createElement("p", { className: "bpc-error" }, error),
         !loading && !error && (react_1.default.createElement(react_1.default.Fragment, null,

@@ -35,6 +35,7 @@ function App() {
       <BitcoinPrice
           label="Current Bitcoin Prices:"
           btnText="Refresh"
+          labelLevel="h3" // options "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
           incLabel={true}
           incBtn={true}
           incUSD={true}
