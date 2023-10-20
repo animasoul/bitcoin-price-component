@@ -33,16 +33,16 @@ button.bpc-refresh {
   color: red;
   transition: color 0.5s ease-out; }
   .increased::after {
-    content: "↑"; }
+    content: " ↑"; }
 
 .decreased {
   color: yellow;
   transition: color 0.5s ease-out; }
   .decreased::after {
-    content: "↓"; }
+    content: " ↓"; }
 
 .unchanged {
   color: green;
   transition: color 0.5s ease-out; }
   .unchanged::after {
-    content: "→"; }
+    content: " ↔"; }
