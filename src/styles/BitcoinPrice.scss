@@ -34,14 +34,14 @@ button.bpc-refresh {
   color: red;
   transition: color 0.5s ease-out;
   &::after {
-    content: "↑";
+    content: " ↑";
   }
 }
 .decreased {
   color: yellow;
   transition: color 0.5s ease-out;
   &::after {
-    content: "↓";
+    content: " ↓";
   }
 }
 
@@ -49,6 +49,6 @@ button.bpc-refresh {
   color: green;
   transition: color 0.5s ease-out;
   &::after {
-    content: "→";
+    content: " ↔";
   }
 }
