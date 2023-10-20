@@ -36,7 +36,7 @@ function App() {
           label="Current Bitcoin Prices:"
           btnText="Refresh"
           incLabel={true}
-          inclBtn={true}
+          incBtn={true}
           incUSD={true}
           incGBP={true}
           incEUR={true}
