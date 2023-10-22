@@ -104,6 +104,9 @@ button.bpc-refresh {
 
 You can see this component in action at [LayerFi](https://layerfi.meta.mt/).
 
+I have also created a Wordpress plugin based on this npm package, you can find it here...
+[Wordpress bitcoin plugin](https://github.com/animasoul/wp-bitcoin-price-plugin)
+
 ## About the Author
 
 **Abel Rogers** - A seasoned web developer. You can find more about him and his projects:
