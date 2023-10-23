@@ -19,6 +19,7 @@ interface BitcoinData {
 }
 
 interface BitcoinPriceProps {
+  containerTag?: "div" | "span";
   label?: string;
   labelLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   btnText?: string;
@@ -52,6 +53,7 @@ type CurrencyStatus = Record<
 function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
   // Destructuring props with defaults
   const {
+    containerTag = "div",
     label = "Bitcoin Price Data:",
     labelLevel = "h3",
     btnText = "Refresh",
@@ -77,6 +79,7 @@ function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
   const lastClickedRef = useRef<number | null>(null);
 
   // Dynamic JSX tags based on props
+  const DynamicContainer = containerTag as keyof JSX.IntrinsicElements;
   const DynamicTag = labelLevel as keyof JSX.IntrinsicElements;
   const DynamicHtml = txtHtml as keyof JSX.IntrinsicElements;
 
@@ -156,7 +159,7 @@ function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
 
   // Rendering
   return (
-    <div className="bitcoin-price-component">
+    <DynamicContainer className="bitcoin-price-component">
       {incLabel && <DynamicTag className="bpc-label">{label}</DynamicTag>}
       {loading && "Fetching Bitcoin price..."}
       {error && <DynamicHtml className="bpc-error">{error}</DynamicHtml>}
@@ -198,7 +201,7 @@ function BitcoinPrice(props: BitcoinPriceProps): JSX.Element {
           {btnText}
         </button>
       )}
-    </div>
+    </DynamicContainer>
   );
 }
 

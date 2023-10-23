@@ -1,5 +1,6 @@
 import React from "react";
 interface BitcoinPriceProps {
+    containerTag?: "div" | "span";
     label?: string;
     labelLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
     btnText?: string;

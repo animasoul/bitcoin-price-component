@@ -53,7 +53,7 @@ const DEBOUNCE_TIME = 1000; // 1 second delay for debounce
 const CURRENCIES = ["USD", "GBP", "EUR"];
 function BitcoinPrice(props) {
     // Destructuring props with defaults
-    const { label = "Bitcoin Price Data:", labelLevel = "h3", btnText = "Refresh", incLabel = true, txtHtml = "p", incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
+    const { containerTag = "div", label = "Bitcoin Price Data:", labelLevel = "h3", btnText = "Refresh", incLabel = true, txtHtml = "p", incBtn = true, incUSD = true, incGBP = true, incEUR = true, incDisclaimer = true, incUpdateTime = true, } = props;
     // State and Refs
     const [updatedTime, setUpdatedTime] = (0, react_1.useState)(null);
     const [rates, setRates] = (0, react_1.useState)(null);
@@ -65,6 +65,7 @@ function BitcoinPrice(props) {
     const prevRatesRef = (0, react_1.useRef)({});
     const lastClickedRef = (0, react_1.useRef)(null);
     // Dynamic JSX tags based on props
+    const DynamicContainer = containerTag;
     const DynamicTag = labelLevel;
     const DynamicHtml = txtHtml;
     // Methods
@@ -125,7 +126,7 @@ function BitcoinPrice(props) {
         fetchPrice();
     }, [fetchPrice]);
     // Rendering
-    return (react_1.default.createElement("div", { className: "bitcoin-price-component" },
+    return (react_1.default.createElement(DynamicContainer, { className: "bitcoin-price-component" },
         incLabel && react_1.default.createElement(DynamicTag, { className: "bpc-label" }, label),
         loading && "Fetching Bitcoin price...",
         error && react_1.default.createElement(DynamicHtml, { className: "bpc-error" }, error),
