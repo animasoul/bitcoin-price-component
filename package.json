@@ -1,7 +1,7 @@
 {
   "name": "bitcoin-price-component",
   "version": "1.2.0",
-  "description": "Bitcoin Price Component for React",
+  "description": "Bitcoin Price Component for React/Typescript taking data from Coindesk API, very configurable and easy to use to display USD, GBP or EUR rates.",
   "main": "dist/components/BitcoinPrice.js",
   "types": "dist/components/BitcoinPrice.d.ts",
   "files": [
