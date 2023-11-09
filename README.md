@@ -2,6 +2,11 @@
 
 ![React Logo](https://reactjs.org/logo-og.png) ![Axios Logo](https://axios-http.com/assets/logo.png)
 
+![npm](https://img.shields.io/npm/v/bitcoin-price-component?logo=npm)
+![npm](https://img.shields.io/npm/dt/bitcoin-price-component?logo=npm)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/animasoul/bitcoin-price-component?logo=github)
+![GitHub issues](https://img.shields.io/github/issues-raw/animasoul/bitcoin-price-component?logo=github)
+
 This is a simple (but customisable) React component to display the current Bitcoin price in USD, GBP or EUR using the [Coindesk API](https://api.coindesk.com/v1/bpi/currentprice.json).
 
 No styles or fancy javascript animations!
