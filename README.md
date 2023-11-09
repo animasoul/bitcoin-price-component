@@ -1,6 +1,6 @@
 # Bitcoin Price Component for React
 
-![React Logo](https://reactjs.org/logo-og.png) ![Axios Logo](https://axios-http.com/assets/logo.png)
+![Bitcoin Price Component Scrrenshot](https://www.ajpartnersltd.com/wp-content/uploads/2023/11/react-component.jpg)
 
 ![npm](https://img.shields.io/npm/v/bitcoin-price-component?logo=npm)
 ![npm](https://img.shields.io/npm/dt/bitcoin-price-component?logo=npm)
